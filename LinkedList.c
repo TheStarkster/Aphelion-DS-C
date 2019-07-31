@@ -1,53 +1,51 @@
 #include <stdlib.h>
 #include <stdio.h>
-
 struct Node
 {
-    int data;
-    struct Node *tail;
-    struct Node *head;
+    int val;
+    struct Node *next;
 };
-struct Node *RootNode;
-struct Node *EndP;
-
-void AddToFirst(float data)
+struct List
 {
-    if (RootNode == NULL)
+    struct Node *RootNode;
+    struct Node *EndPointer;
+};
+void append(struct Node **NodePointer, int data)
+{
+    struct Node *temp = (struct Node *)malloc(sizeof(struct Node));
+    temp->next = NULL;
+    temp->val = data;
+    if (*NodePointer == NULL)
     {
-        RootNode = (struct Node *)malloc(sizeof(struct Node));
-        RootNode->data = data;
-        EndP = RootNode;
+        struct List *container = (struct List *)malloc(sizeof(struct List));
+        container->RootNode = temp;
+        container->EndPointer = temp;
+        *NodePointer = &container->RootNode;
     }
     else
-    {
-        printf("Something Went Wrong!");
+    {   
+        int *inc = *NodePointer;
+        struct Node **TempEndPointer = inc+2;
+        (*TempEndPointer)->next = temp;
+        *TempEndPointer = temp;  
     }
 }
-void AddToLast(float data){
-    if(EndP != NULL){
-        struct Node *link = (struct Node *)malloc(sizeof(struct Node));
-        link->data = data;
-        link->head = EndP;
-        link->tail = NULL;
-        EndP->tail = link;
-        EndP = link;
-    }
-}
-void PrintList(){
-
-    struct Node *temp = RootNode;
-    while (temp != NULL)
+void printlist(struct Node **Pointer)
+{
+    while ((*Pointer) != NULL)
     {
-        printf("%d",temp->data);
-        printf("\n");
-        temp = temp->tail;
+        printf("%d", (*Pointer)->val);
+        printf("%s", "\n");
+        (*Pointer) = (*Pointer)->next;
     }
 }
 void main()
 {
-    AddToFirst(23);
-    AddToLast(34);
-    AddToLast(4);
-    AddToLast(66);
-    PrintList();
+    struct Node *FirstNode = NULL;
+    append(&FirstNode, 20);
+    append(&FirstNode, 30);
+    append(&FirstNode, 40);
+    append(&FirstNode, 50);
+    
+    printlist(FirstNode);
 }
